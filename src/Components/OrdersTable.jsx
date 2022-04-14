@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react'
 import OrdersService from '../API/OrdersService';
-import CustomersService from '../API/CustomersService';
-import Modal from 'react-modal/lib/components/Modal';
 import { useFetching } from '../hooks/useFetching';
-import SearchAddress from './SearchAddress';
+import AddOrderModal from './AddOrderModal';
+import AssignOrderModal from './AssignOrderModal';
+import ChangeOrderModal from './ChangeOrderModal';
+
 const customStyles = {
     content: {
         top: '50%',
@@ -14,10 +15,11 @@ const customStyles = {
         transform: 'translate(-50%, -50%)',
     },
 };
+
 export default function OrdersTable() {
-    const [items, setItems] = useState(null)
+    const [items, setItems] = useState([])
     const [filter, setFilter] = useState('finished')
-    const [modalState, setModalState] = useState({ isOpen: false, modal: null });
+    const [modal, setModal] = useState(null);
     const [fetchData, isLoading, isError] = useFetching(async () => {
         await OrdersService.fetchOrders().
             then(result => {
@@ -37,48 +39,22 @@ export default function OrdersTable() {
     })
     useEffect(() => {
         fetchData();
-    }, [filter])
+    }, [filter, modal])
     const closeModal = () => {
-        setModalState({ isOpen: false, modal: null });
+        setModal(null);
     }
-    const openAddModal = async () => {
-        let customers = await CustomersService.fetchCustomers();
-        console.log(customers);
-        const modal = (
-            <Modal isOpen={true} onRequestClose={closeModal} style={customStyles}>
-                <select className="form-select" id="customerId">
-                    {customers.map(item => {
-                        return (
-                            <option key={item.id} value={item?.id}>
-                                {item?.name}
-                            </option>
-                        )
-                    })}
-                </select>
-                <SearchAddress></SearchAddress>
-            </Modal >
-        )
-        setModalState({ isOpen: true, modal: modal })
+    const openAddModal = () => {
+        setModal(<AddOrderModal isOpen={true} closeModal={closeModal} />)
     }
-    const openChangeModal = async (item) => {
-        const modal = (
-            <Modal isOpen={true} onRequestClose={closeModal} style={customStyles}>
-                Изменить
-            </Modal>
-        )
-        setModalState({ isOpen: true, modal: modal })
+    const openChangeModal = (order) => {
+        setModal(<ChangeOrderModal isOpen={true} closeModal={closeModal} order={order} />)
     }
-    const openAssignmentModal = async (item) => {
-        const modal = (
-            <Modal isOpen={true} onRequestClose={closeModal} style={customStyles}>
-                Выдать
-            </Modal>
-        )
-        setModalState({ isOpen: true, modal: modal })
+    const openAssignmentModal = (order) => {
+        setModal(<AssignOrderModal isOpen={true} closeModal={closeModal} order={order} />)
     }
     return (
         <div>
-            {modalState.isOpen && modalState.modal}
+            {modal ?? <></>}
             <ul>
                 <li><button onClick={() => { openAddModal(); }}>Добавить</button></li>
                 <li><button onClick={() => { setFilter('assigned') }}>Выданные</button></li>
