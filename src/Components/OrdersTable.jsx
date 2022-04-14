@@ -52,6 +52,11 @@ export default function OrdersTable() {
     const openAssignmentModal = (order) => {
         setModal(<AssignOrderModal isOpen={true} closeModal={closeModal} order={order} />)
     }
+    const deleteOrder = (order) => {
+        OrdersService.deleteOrder(order.id).then(data => {
+            fetchData();
+        })
+    }
     return (
         <div>
             {modal ?? <></>}
@@ -80,8 +85,15 @@ export default function OrdersTable() {
                                     <td>{item?.customer?.name}</td>
                                     {
                                         filter == "notassigned" ?
-                                            <td><button onClick={() => { openAssignmentModal(item) }}>Выдать</button><button onClick={() => { openChangeModal(item) }}>Изменить</button><button>Удалить</button></td> :
-                                            <td><button onClick={() => { openChangeModal(item) }}>Изменить</button><button>Удалить</button></td>
+                                            <td>
+                                                <button onClick={() => { openAssignmentModal(item) }}>Выдать</button>
+                                                <button onClick={() => { openChangeModal(item) }}>Изменить</button>
+                                                <button onClick={() => { deleteOrder(item) }}>Удалить</button>
+                                            </td> :
+                                            <td>
+                                                <button onClick={() => { openChangeModal(item) }}>Изменить</button>
+                                                <button onClick={() => { deleteOrder(item) }}>Удалить</button>
+                                            </td>
                                     }
                                 </tr>
                             )
