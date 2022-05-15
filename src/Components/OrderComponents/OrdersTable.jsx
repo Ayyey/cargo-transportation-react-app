@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
-import OrdersService from '../API/OrdersService';
-import { useFetching } from '../hooks/useFetching';
+import OrdersService from '../../API/OrdersService';
+import { useFetching } from '../../hooks/useFetching';
 import AddOrderModal from './AddOrderModal';
 import AssignOrderModal from './AssignOrderModal';
 import ChangeOrderModal from './ChangeOrderModal';
@@ -60,13 +60,11 @@ export default function OrdersTable() {
     return (
         <div>
             {modal ?? <></>}
-            <ul>
-                <li><button onClick={() => { openAddModal(); }}>Добавить</button></li>
-                <li><button onClick={() => { setFilter('assigned') }}>Выданные</button></li>
-                <li><button onClick={() => { setFilter('notassigned') }}>Невыданные</button></li>
-                <li><button onClick={() => { setFilter('finished') }}>Выполненные</button></li>
-            </ul>
-            <table>
+            <button onClick={() => { openAddModal(); }} className="btn btn-success mx-3">Добавить</button>
+            <button onClick={() => { setFilter('assigned') }} className={filter == 'assigned' ? "btn btn-primary" : "btn btn-outline-primary"}>Выданные</button>
+            <button onClick={() => { setFilter('notassigned') }} className={filter == 'notassigned' ? "btn btn-primary" : "btn btn-outline-primary"}>Невыданные</button>
+            <button onClick={() => { setFilter('finished') }} className={filter == 'finished' ? "btn btn-primary" : "btn btn-outline-primary"}>Выполненные</button>
+            <table className='table'>
                 <thead>
                     <tr>
                         <th>#</th>
@@ -86,13 +84,13 @@ export default function OrdersTable() {
                                     {
                                         filter == "notassigned" ?
                                             <td>
-                                                <button onClick={() => { openAssignmentModal(item) }}>Выдать</button>
-                                                <button onClick={() => { openChangeModal(item) }}>Изменить</button>
-                                                <button onClick={() => { deleteOrder(item) }}>Удалить</button>
+                                                <button onClick={() => { openAssignmentModal(item) }} className="btn btn-primary mx-3">Выдать</button>
+                                                <button onClick={() => { openChangeModal(item) }} className="btn btn-primary mx-3">Изменить</button>
+                                                <button onClick={() => { deleteOrder(item) }} className="btn btn-danger">Удалить</button>
                                             </td> :
                                             <td>
-                                                <button onClick={() => { openChangeModal(item) }}>Изменить</button>
-                                                <button onClick={() => { deleteOrder(item) }}>Удалить</button>
+                                                <button onClick={() => { openChangeModal(item) }} className="btn btn-primary mx-3">Изменить</button>
+                                                <button onClick={() => { deleteOrder(item) }} className="btn btn-danger">Удалить</button>
                                             </td>
                                     }
                                 </tr>
@@ -100,6 +98,6 @@ export default function OrdersTable() {
                         })}
                 </tbody>
             </table>
-        </div>
+        </div >
     )
 }

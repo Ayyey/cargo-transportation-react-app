@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react'
 import Modal from 'react-modal/lib/components/Modal'
-import CustomersService from '../API/CustomersService';
-import { useFetching } from '../hooks/useFetching';
-import useDebounce from '../hooks/useDebounce';
-import GraphhopperApi from '../API/GraphhopperApi';
-import OrdersService from '../API/OrdersService';
+import CustomersService from '../../API/CustomersService';
+import { useFetching } from '../../hooks/useFetching';
+import useDebounce from '../../hooks/useDebounce';
+import GraphhopperApi from '../../API/GraphhopperApi';
+import OrdersService from '../../API/OrdersService';
 import { MapContainer, Marker, TileLayer, useMap } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 const customStyles = {
@@ -53,6 +53,7 @@ export default function ChangeOrderModal({ closeModal, order }) {
     }
     return (
         <Modal isOpen={true} onRequestClose={closeModal} style={customStyles}>
+            <h4 className='text-center'>Изменение заявки</h4>
             <MapContainer center={[52.30217, 104.30023]} zoom={13} style={{ width: "600px", height: "500px" }} id={'map'}
                 whenCreated={setMap}>
                 <TileLayer
