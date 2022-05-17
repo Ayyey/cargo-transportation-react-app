@@ -1,32 +1,48 @@
 import React, { useState, useEffect } from 'react'
+import { Route, Routes, useLocation, useNavigate } from 'react-router-dom'
 import { useFetching } from '../../hooks/useFetching';
 import DriverService from '../../API/DriverService';
-export default function DriverOrderTable({ driver }) {
-    const [routes, setRoutes] = useState([])
+import ViewOrderModal from './ViewOrderModal';
+import RouteService from '../../API/RouteService';
+export default function DriverOrderTable() {
+    const userId = localStorage.getItem('userId');
+    const navigate = useNavigate();
+    const currentRoute = useLocation();
+    const [routes, setRoutes] = useState([]);
     const [modal, setModal] = useState(null);
+    const [filter, setFilter] = useState('');
     const [fetchData, isLoading, isError] = useFetching(async () => {
-        DriverService.fetchDriversRoutes(driver.id)
+        DriverService.fetchDriversRoutes(userId)
             .then((data) => {
+                data = data.filter((item) => {
+                    if (filter == 'finished')
+                        return item.finished;
+                    else if (filter == 'notfinished')
+                        return !item.finished
+                })
                 setRoutes(data);
-                console.log(data);
             })
     })
     useEffect(() => {
         fetchData();
-    }, [modal])
+    }, [modal, filter])
     const closeModal = () => {
         setModal(null);
     }
-    const openOrderViewModal = () => {
-        setModal()
+    const openOrderViewModal = (order) => {
+        setModal(<ViewOrderModal closeModal={closeModal} order={order}></ViewOrderModal>);
     }
     const setOrderFinished = (id) => {
-
+        RouteService.setRouteFinished(id).then(() => { fetchData() });
     }
     return (
         <div>
             {modal ?? <></>}
             <div>
+                <div className='mt-5 d-flex'>
+                    <button onClick={() => { navigate('home/newOrders');; setFilter('notfinished') }} className={currentRoute.pathname.includes("newOrders") ? 'btn-primary' : 'btn-outline-primary'}>Новые заявки</button>
+                    <button onClick={() => { navigate('home/doneOrders'); setFilter('finished') }} className={currentRoute.pathname.includes("doneOrders") ? 'btn-primary' : 'btn-outline-primary'}>Выполненные</button>
+                </div>
                 <table className='table'>
                     <thead>
                         <tr>
@@ -43,10 +59,11 @@ export default function DriverOrderTable({ driver }) {
                                     <tr key={item?.id}>
                                         <td>{item?.id}</td>
                                         <td>{item?.addresses?.map(adr => adr.name + ',')}</td>
+                                        <td>{item?.order.customer.name}</td>
                                         {
                                             <td>
-                                                <button onClick={() => { }} className="btn btn-primary mx-3">Изменить</button>
-                                                <button onClick={() => { }} className="btn btn-danger">Удалить</button>
+                                                <button onClick={() => { openOrderViewModal(item) }} className="btn btn-primary mx-3">Просмотр</button>
+                                                {filter == 'notfinished' ? <button onClick={() => { setOrderFinished(item.id) }} className="btn btn-primary mx-3">Выполнено</button> : <></>}
                                             </td>
                                         }
                                     </tr>

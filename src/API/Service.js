@@ -4,7 +4,7 @@ const safetyJson = async response => {
   if (response.ok) {
     try {
       return await response.json()
-    } catch(e) {
+    } catch (e) {
       return Promise.resolve()
     }
   } else {
@@ -16,7 +16,7 @@ export default {
   root: host + 'api/',
 
   async fetchJson(url, token) {
-    let addHeaders = token ? {'Authorization': 'Bearer ' + token}  : {}
+    let addHeaders = token ? { 'Authorization': 'Bearer ' + token } : {}
 
 
     const response = await fetch(url, {
@@ -29,7 +29,7 @@ export default {
   },
 
   async sendJson(url, data, method = 'POST', token = null) {
-    let addHeaders = token ? {'Authorization': 'Bearer ' + token}  : {}
+    let addHeaders = token ? { 'Authorization': 'Bearer ' + token } : {}
 
     const response = await fetch(url, {
       method: method,
@@ -43,17 +43,17 @@ export default {
     return safetyJson(response)
   },
 
-//   async sendFormData(url, formData, token = null) {
-//     let addHeaders = token ? {'Authorization': 'Bearer ' + token}  : {}
+  //   async sendFormData(url, formData, token = null) {
+  //     let addHeaders = token ? {'Authorization': 'Bearer ' + token}  : {}
 
-//     const response = await fetch(url, {
-//       method: 'POST',
-//       body: formData,
-//       headers: {
-//         ...addHeaders
-//       }
-//     })
+  //     const response = await fetch(url, {
+  //       method: 'POST',
+  //       body: formData,
+  //       headers: {
+  //         ...addHeaders
+  //       }
+  //     })
 
-//     return safetyJson(response)
-//   }
+  //     return safetyJson(response)
+  //   }
 }

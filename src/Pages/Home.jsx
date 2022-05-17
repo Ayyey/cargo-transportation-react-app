@@ -1,12 +1,11 @@
 import React, { useState, useEffect } from 'react'
-import { useLocation } from 'react-router-dom'
-import { Route, Routes } from 'react-router-dom'
+import { Route, Routes, useLocation } from 'react-router-dom'
 import DriversTable from '../Components/DriverComponents/DriversTable'
 import OrdersTable from '../Components/OrderComponents/OrdersTable'
 import TransportTable from '../Components/TransportComponents/TransportTable'
 import CustomersTable from '../Components/CustomersComponents/CustomersTable'
 import DriverOrderTable from '../Components/DriverOrderTable/DriverOrderTable'
-export default function Home({ role, token, navigate }) {
+export default function Home({ role, navigate }) {
     const currentRoute = useLocation();
     switch (role.toLowerCase()) {
         case 'admin':
@@ -30,14 +29,7 @@ export default function Home({ role, token, navigate }) {
         case 'driver':
             return (<div>
                 <h1>driver panel</h1>
-                <div className='mt-5 d-flex'>
-                    <button onClick={() => { navigate('home/newOrders') }} className={currentRoute.pathname.includes("newOrders") ? 'btn-primary' : 'btn-outline-primary'}>Новые заявки</button>
-                    <button onClick={() => { navigate('home/doneOrders') }} className={currentRoute.pathname.includes("doneOrders") ? 'btn-primary' : 'btn-outline-primary'}>Выполненные</button>
-                </div>
-                <Routes>
-                    <Route path='newOrders' element={<DriverOrderTable></DriverOrderTable>}></Route>
-                    <Route path='doneOrders' element={<div>doneOrders</div>}></Route>
-                </Routes>
+                <DriverOrderTable></DriverOrderTable>
                 <button onClick={() => { localStorage.clear(); navigate('login') }}>Выйти</button>
             </div>)
         default:

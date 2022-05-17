@@ -9,6 +9,7 @@ Modal.setAppElement('#root');
 function App() {
   const [token, setToken] = useState(localStorage.getItem('token'));
   const [role, setRole] = useState(localStorage.getItem('role'));
+  const [userId, setUserId] = useState(localStorage.getItem('userId'))
   const navigate = useNavigate();
   useEffect(() => {
     if (!token) {
@@ -23,7 +24,7 @@ function App() {
       <header className="App-header">
         <Routes>
           <Route path='/login' element={<Login setToken={setToken} setRole={setRole} navigate={navigate}></Login>}></Route>
-          <Route path='/home/*' element={<Home role={role} token={token} navigate={navigate}></Home>}></Route>
+          <Route path='/home/*' element={<Home role={role} token={token} navigate={navigate} userId={userId}></Home>}></Route>
         </Routes>
       </header>
     </div>
