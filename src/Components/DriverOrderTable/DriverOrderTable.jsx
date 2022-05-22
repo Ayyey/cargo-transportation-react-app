@@ -39,9 +39,9 @@ export default function DriverOrderTable() {
         <div>
             {modal ?? <></>}
             <div>
-                <div className='mt-5 d-flex'>
-                    <button onClick={() => { navigate('home/newOrders');; setFilter('notfinished') }} className={currentRoute.pathname.includes("newOrders") ? 'btn-primary' : 'btn-outline-primary'}>Новые заявки</button>
-                    <button onClick={() => { navigate('home/doneOrders'); setFilter('finished') }} className={currentRoute.pathname.includes("doneOrders") ? 'btn-primary' : 'btn-outline-primary'}>Выполненные</button>
+                <div className='mt-5 d-flex' style={{paddingLeft:'32px'}}>
+                    <button onClick={() => { navigate('home/newOrders');; setFilter('notfinished') }} className={currentRoute.pathname.includes("newOrders") ? 'btn btn-primary' : 'btn btn-outline-primary'}>Новые заявки</button>
+                    <button onClick={() => { navigate('home/doneOrders'); setFilter('finished') }} className={currentRoute.pathname.includes("doneOrders") ? 'btn btn-primary' : 'btn btn-outline-primary'}>Выполненные</button>
                 </div>
                 <table className='table'>
                     <thead>

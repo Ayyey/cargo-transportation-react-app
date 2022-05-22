@@ -1,0 +1,12 @@
+.list-group-item:hover{
+    cursor: pointer;
+    background-color: rgb(229, 229, 229);
+}
+.deleteMarker{
+    position: absolute;
+    right: 4px;
+    color: red;
+}
+.deleteMarker:hover{
+    cursor: pointer;
+}

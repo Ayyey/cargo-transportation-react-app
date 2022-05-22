@@ -4,7 +4,7 @@ import TransportService from '../../API/TransportService';
 const customStyles = {
     content: {
         width: 600,
-        height: 600,
+        height: 220,
         top: '50%',
         left: '50%',
         right: 'auto',
@@ -25,6 +25,7 @@ export default function ChangeTransportModal({ closeModal, transport }) {
             <h4 className='text-center'>Изменение транспортного средства</h4>
             <div>
                 <div>
+                    Название ТС
                     <input type="text" placeholder='Название' className='mb-3 form-control' onChange={(e) => { setName(e.target.value) }} value={name ?? ''} />
                 </div>
                 <button className='btn btn-primary' onClick={() => { addTransport() }}>Отправить</button>

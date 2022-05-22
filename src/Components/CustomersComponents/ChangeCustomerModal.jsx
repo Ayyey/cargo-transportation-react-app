@@ -4,7 +4,7 @@ import CustomersService from '../../API/CustomersService';
 const customStyles = {
     content: {
         width: 600,
-        height: 600,
+        height: 300,
         top: '50%',
         left: '50%',
         right: 'auto',
@@ -27,9 +27,11 @@ export default function ChangeCustomerModal({ closeModal, customer }) {
             <h4 className='text-center'>Изменение заказчика</h4>
             <div>
                 <div>
+                    Наименование заказчика
                     <input type="text" placeholder='Наименование' className='mb-3 form-control' onChange={(e) => { setName(e.target.value) }} value={name ?? ''} />
                 </div>
                 <div>
+                    Телефон заказчика
                     <input type="text" placeholder='Телефон' className='mb-3 form-control' onChange={(e) => { setPhoneNumber(e.target.value) }} value={phoneNumber ?? ''} />
                 </div>
                 <button className='btn btn-primary' onClick={() => { changeCustomer() }}>Отправить</button>

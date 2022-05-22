@@ -5,6 +5,7 @@ import L from 'leaflet'
 import 'leaflet-routing-machine'
 import 'leaflet/dist/leaflet.css';
 import '../../styles/leaflet-option.css'
+import { icon } from '../../marker';
 const customStyles = {
     content: {
         width: 600,
@@ -40,7 +41,8 @@ export default function ViewOrderModal({ closeModal, order }) {
             waypoints: points,
             lineOptions: {
                 addWaypoints: false
-            }
+            },
+            createMarker: function () { return icon }
         }).addTo(map);
     }, 100)
     return (
