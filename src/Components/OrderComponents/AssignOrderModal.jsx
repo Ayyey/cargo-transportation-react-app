@@ -7,11 +7,9 @@ import HopperService from '../../API/HopperService';
 import DriverService from '../../API/DriverService';
 import { MapContainer, Marker, TileLayer } from 'react-leaflet';
 import L from 'leaflet';
-import { icon } from '../../marker';
+import { icon, greenIcon } from '../../marker';
 import 'leaflet-routing-machine'
 import 'leaflet/dist/leaflet.css';
-
-
 const customStyles = {
     content: {
         width: 800,
@@ -46,70 +44,107 @@ export default function AssignOrderModal({ closeModal, order }) {
         setSelectedDrivers(selectedDrivers.filter((driverFltr) => { return driverFltr.id != driver.id }))
     }
     const createRoute = () => {
+        console.table({ selectedAddresses, selectedDrivers })
         HopperService.optimization(selectedAddresses, selectedDrivers)
             .then((data) => {
-                if (data)
-                    console.log('succes! data', { data })
-                else
-                    console.log('error!!')
+                setSolutions(data.routeLists)
+                const routes = data.routeLists;
+                for (const [index, route] of routes.entries()) {
+                    const ways = route.groupedOrder
+                    const points = ways.map((item) => {
+                        const points = []
+                        points.push(item.latitude)
+                        points.push(item.longitude)
+                        return points
+                    })
+                    let routeStyle;
+                    if (index === 2) {
+                        routeStyle = { color: 'cyan' }
+                    } else if (index === 1) {
+                        routeStyle = { color: 'black' }
+                    } else if (index === 0) {
+                        routeStyle = { color: 'green' }
+                    } else {
+                        routeStyle = { color: 'blue' }
+                    }
+                    L.Routing.control({
+                        waypoints: points,
+                        addWaypoints: false,
+                        lineOptions: {
+                            addWaypoints: false,
+                            styles: [routeStyle]
+                        },
+                        createMarker: function () { return null }
+                    }).addTo(map);
+                    if (index == 0) {
+                        const marker = new L.marker([
+                            ways[0].latitude,
+                            ways[0].longitude
+                        ], { icon: greenIcon }
+                        )
+                        map.addLayer(marker)
+                    }
+                }
             })
-        //     GraphhopperApi.optimization(selectedAddresses, selectedDrivers)
-        //         .then((data) => {
-        //             console.log("optimized")
-        //             GraphhopperApi.getSolution(data['job_id'])
-        //                 .then((data) => {
-        //                     console.log("got solution")
-        //                     console.log({ data })
-        //                     setSolutions(data.solution.routes);
-        //                     const routes = data.solution.routes;
-        //                     for (const [index, route] of routes.entries()) {
-        //                         const ways = route.activities
-        //                         const points = ways.map((item) => {
-        //                             const points = []
-        //                             points.push(item.address.lat)
-        //                             points.push(item.address.lon)
-        //                             return points
-        //                         })
-        //                         let routeStyle;
-        //                         if (index === 2) {
-        //                             routeStyle = { color: 'cyan' }
-        //                         } else if (index === 1) {
-        //                             routeStyle = { color: 'black' }
-        //                         } else if (index === 0) {
-        //                             routeStyle = { color: 'green' }
-        //                         } else {
-        //                             routeStyle = { color: 'blue' }
-        //                         }
-        //                         L.Routing.control({
-        //                             waypoints: points,
-        //                             addWaypoints: false,
-        //                             lineOptions: {
-        //                                 addWaypoints: false,
-        //                                 styles: [routeStyle]
-        //                             },
-        //                             createMarker: function () { return null }
-        //                         }).addTo(map);
-        //                         const marker = new L.marker([
-        //                             selectedDrivers[0].vehicle.startAddress.lat,
-        //                             selectedDrivers[0].vehicle.startAddress.lon,], { icon: icon }
-        //                         )
-        //                         map.addLayer(marker)
-        //                         marker._icon.classList.add('huechange')
+        // GraphhopperApi.optimization(selectedAddresses, selectedDrivers)
+        //     .then((data) => {
+        //         console.log("optimized")
+        //         GraphhopperApi.getSolution(data['job_id'])
+        //             .then((data) => {
+        //                 console.log("got solution")
+        //                 console.log({ data })
+        //                 setSolutions(data.solution.routes);
+        //                 const routes = data.solution.routes;
+        //                 for (const [index, route] of routes.entries()) {
+        //                     const ways = route.activities
+        //                     const points = ways.map((item) => {
+        //                         const points = []
+        //                         points.push(item.address.lat)
+        //                         points.push(item.address.lon)
+        //                         return points
+        //                     })
+        //                     let routeStyle;
+        //                     if (index === 2) {
+        //                         routeStyle = { color: 'cyan' }
+        //                     } else if (index === 1) {
+        //                         routeStyle = { color: 'black' }
+        //                     } else if (index === 0) {
+        //                         routeStyle = { color: 'green' }
+        //                     } else {
+        //                         routeStyle = { color: 'blue' }
         //                     }
-        //                 })
-        //         })
-
+        //                     L.Routing.control({
+        //                         waypoints: points,
+        //                         addWaypoints: false,
+        //                         lineOptions: {
+        //                             addWaypoints: false,
+        //                             styles: [routeStyle]
+        //                         },
+        //                         createMarker: function () { return null }
+        //                     }).addTo(map);
+        //                     const marker = new L.marker([
+        //                         selectedDrivers[0].vehicle.startAddress.lat,
+        //                         selectedDrivers[0].vehicle.startAddress.lon,], { icon: icon }
+        //                     )
+        //                     map.addLayer(marker)
+        //                     marker._icon.classList.add('huechange')
+        //                 }
+        //             })
+        //     })
     }
     const addRoute = () => {
         if (solutions != null) {
             const orderId = order.id;
+            console.log({ solutions: solutions })
             for (const driver of selectedDrivers) {
-                const route = solutions.find((item) => +item['vehicle_id'] === driver.vehicle.id)
-
+                const routeList = solutions.find((item) => item.driver.truck.id === driver.vehicle.id)
+                console.log({ routeList: routeList })
                 const addresses = [];
-                for (let i = 1; i < route.activities.length - 1; i++) {
-                    addresses.push(+route.activities[i]['location_id']);
+                for (let i = 0; i < routeList.groupedOrder.length; i++) {
+                    if (routeList.groupedOrder[i].id !== 1000)
+                        addresses.push(routeList.groupedOrder[i].id);
                 }
+                console.log({ addresses: addresses })
                 RouteService.addRoute(orderId, driver.id, addresses)
                     .then((data) => {
                         closeModal();

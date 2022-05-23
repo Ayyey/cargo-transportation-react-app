@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Modal from 'react-modal/lib/components/Modal'
 import { MapContainer, Marker, TileLayer, useMap } from 'react-leaflet';
 import L from 'leaflet'
@@ -30,6 +30,8 @@ export default function ViewOrderModal({ closeModal, order }) {
             lat: order.driver.vehicle.startAddress.lat,
             lon: order.driver.vehicle.startAddress.lon
         })
+        if (!map)
+            map = L.map('map');
         map.setView([52.30217, 104.30023], 14)
         const points = order.addresses.map(item => {
             const points = [];
@@ -44,7 +46,15 @@ export default function ViewOrderModal({ closeModal, order }) {
             },
             createMarker: function () { return icon }
         }).addTo(map);
-    }, 100)
+        for (const point of points) {
+            const marker = new L.marker([
+                point.lat,
+                point.lon
+            ], { icon: icon }
+            )
+            map.addLayer(marker)
+        }
+    }, 400)
     return (
         <Modal isOpen={true} onRequestClose={closeModal} style={customStyles}>
             <h4 className='text-center'>Маршрут</h4>

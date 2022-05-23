@@ -2,8 +2,8 @@ import React, { useState, useEffect } from 'react'
 import { Route, Routes, useLocation, useNavigate } from 'react-router-dom'
 import { useFetching } from '../../hooks/useFetching';
 import DriverService from '../../API/DriverService';
-import ViewOrderModal from './ViewOrderModal';
 import RouteService from '../../API/RouteService';
+import ViewOrderModal from './ViewOrderModal';
 export default function DriverOrderTable() {
     const userId = localStorage.getItem('userId');
     const navigate = useNavigate();
@@ -21,6 +21,7 @@ export default function DriverOrderTable() {
                         return !item.finished
                 })
                 setRoutes(data);
+                console.log(data)
             })
     })
     useEffect(() => {
@@ -39,7 +40,7 @@ export default function DriverOrderTable() {
         <div>
             {modal ?? <></>}
             <div>
-                <div className='mt-5 d-flex' style={{paddingLeft:'32px'}}>
+                <div className='mt-5 d-flex' style={{ paddingLeft: '32px' }}>
                     <button onClick={() => { navigate('home/newOrders');; setFilter('notfinished') }} className={currentRoute.pathname.includes("newOrders") ? 'btn btn-primary' : 'btn btn-outline-primary'}>Новые заявки</button>
                     <button onClick={() => { navigate('home/doneOrders'); setFilter('finished') }} className={currentRoute.pathname.includes("doneOrders") ? 'btn btn-primary' : 'btn btn-outline-primary'}>Выполненные</button>
                 </div>
