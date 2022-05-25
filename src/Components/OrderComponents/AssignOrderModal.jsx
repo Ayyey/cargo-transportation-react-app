@@ -44,7 +44,6 @@ export default function AssignOrderModal({ closeModal, order }) {
         setSelectedDrivers(selectedDrivers.filter((driverFltr) => { return driverFltr.id != driver.id }))
     }
     const createRoute = () => {
-        console.table({ selectedAddresses, selectedDrivers })
         HopperService.optimization(selectedAddresses, selectedDrivers)
             .then((data) => {
                 setSolutions(data.routeLists)
@@ -76,7 +75,7 @@ export default function AssignOrderModal({ closeModal, order }) {
                         },
                         createMarker: function () { return null }
                     }).addTo(map);
-                    if (index == 0) {
+                    if (index == 0 || index == routes.length) {
                         const marker = new L.marker([
                             ways[0].latitude,
                             ways[0].longitude
@@ -86,65 +85,16 @@ export default function AssignOrderModal({ closeModal, order }) {
                     }
                 }
             })
-        // GraphhopperApi.optimization(selectedAddresses, selectedDrivers)
-        //     .then((data) => {
-        //         console.log("optimized")
-        //         GraphhopperApi.getSolution(data['job_id'])
-        //             .then((data) => {
-        //                 console.log("got solution")
-        //                 console.log({ data })
-        //                 setSolutions(data.solution.routes);
-        //                 const routes = data.solution.routes;
-        //                 for (const [index, route] of routes.entries()) {
-        //                     const ways = route.activities
-        //                     const points = ways.map((item) => {
-        //                         const points = []
-        //                         points.push(item.address.lat)
-        //                         points.push(item.address.lon)
-        //                         return points
-        //                     })
-        //                     let routeStyle;
-        //                     if (index === 2) {
-        //                         routeStyle = { color: 'cyan' }
-        //                     } else if (index === 1) {
-        //                         routeStyle = { color: 'black' }
-        //                     } else if (index === 0) {
-        //                         routeStyle = { color: 'green' }
-        //                     } else {
-        //                         routeStyle = { color: 'blue' }
-        //                     }
-        //                     L.Routing.control({
-        //                         waypoints: points,
-        //                         addWaypoints: false,
-        //                         lineOptions: {
-        //                             addWaypoints: false,
-        //                             styles: [routeStyle]
-        //                         },
-        //                         createMarker: function () { return null }
-        //                     }).addTo(map);
-        //                     const marker = new L.marker([
-        //                         selectedDrivers[0].vehicle.startAddress.lat,
-        //                         selectedDrivers[0].vehicle.startAddress.lon,], { icon: icon }
-        //                     )
-        //                     map.addLayer(marker)
-        //                     marker._icon.classList.add('huechange')
-        //                 }
-        //             })
-        //     })
     }
     const addRoute = () => {
         if (solutions != null) {
             const orderId = order.id;
-            console.log({ solutions: solutions })
             for (const driver of selectedDrivers) {
                 const routeList = solutions.find((item) => item.driver.truck.id === driver.vehicle.id)
-                console.log({ routeList: routeList })
                 const addresses = [];
                 for (let i = 0; i < routeList.groupedOrder.length; i++) {
-                    if (routeList.groupedOrder[i].id !== 1000)
-                        addresses.push(routeList.groupedOrder[i].id);
+                    addresses.push(routeList.groupedOrder[i].id);
                 }
-                console.log({ addresses: addresses })
                 RouteService.addRoute(orderId, driver.id, addresses)
                     .then((data) => {
                         closeModal();

@@ -12,18 +12,21 @@ export default function DriverOrderTable() {
     const [modal, setModal] = useState(null);
     const [filter, setFilter] = useState('');
     const [fetchData, isLoading, isError] = useFetching(async () => {
-        DriverService.fetchDriversRoutes(userId)
-            .then((data) => {
-                data = data.filter((item) => {
-                    if (filter == 'finished')
-                        return item.finished;
-                    else if (filter == 'notfinished')
-                        return !item.finished
+        for (let i = 0; i < 5; i++) {
+            const closureConst = i;
+            DriverService.fetchDriversRoutes(userId)
+                .then((data) => {
+                    data = data.filter((item) => {
+                        if (filter == 'finished')
+                            return item.finished;
+                        else if (filter == 'notfinished')
+                            return !item.finished
+                    })
+                    setRoutes(data);
                 })
-                setRoutes(data);
-                console.log(data)
-            })
+        }
     })
+
     useEffect(() => {
         fetchData();
     }, [modal, filter])

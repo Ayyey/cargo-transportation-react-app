@@ -1,4 +1,5 @@
 import Service from './Service'
+import config from '../Config/config'
 
 export default {
     async fetchTransports() {
@@ -10,14 +11,14 @@ export default {
     },
 
     async addTransports(name) {
-        const startAddress = { id: 1 }
+        const startAddress = { id: config.startAdressId }
         return await Service.sendJson(Service.root + 'vehicles', {
             startAddress, name
         }, 'POST', localStorage.getItem('token'))
     },
 
     async changeTransports(id, name) {
-        const startAddress = { id: 1 }
+        const startAddress = { id: config.startAdressId }
         return await Service.sendJson(Service.root + 'vehicles/update', {
             id, name, startAddress
         }, 'POST', localStorage.getItem('token'))

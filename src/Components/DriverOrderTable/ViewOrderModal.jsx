@@ -21,18 +21,9 @@ const customStyles = {
 
 export default function ViewOrderModal({ closeModal, order }) {
     const [map, setMap] = useState(null);
-    setTimeout(() => {
-        order.addresses.unshift({
-            lat: order.driver.vehicle.startAddress.lat,
-            lon: order.driver.vehicle.startAddress.lon
-        })
-        order.addresses.push({
-            lat: order.driver.vehicle.startAddress.lat,
-            lon: order.driver.vehicle.startAddress.lon
-        })
-        if (!map)
-            map = L.map('map');
-        map.setView([52.30217, 104.30023], 14)
+    const loadRoutes = (loadedMap) => {
+        setMap(loadedMap)
+        loadedMap.setView([52.30217, 104.30023], 13)
         const points = order.addresses.map(item => {
             const points = [];
             points.push(item.lat);
@@ -44,22 +35,18 @@ export default function ViewOrderModal({ closeModal, order }) {
             lineOptions: {
                 addWaypoints: false
             },
-            createMarker: function () { return icon }
-        }).addTo(map);
+            createMarker: function () { return null }
+        }).addTo(loadedMap);
         for (const point of points) {
-            const marker = new L.marker([
-                point.lat,
-                point.lon
-            ], { icon: icon }
-            )
-            map.addLayer(marker)
+            const marker = new L.marker(point, { icon: icon })
+            loadedMap.addLayer(marker)
         }
-    }, 400)
+    }
     return (
         <Modal isOpen={true} onRequestClose={closeModal} style={customStyles}>
             <h4 className='text-center'>Маршрут</h4>
             <MapContainer center={[52.30217, 104.30023]} zoom={13} style={{ width: "600px", height: "500px" }} id={'map'}
-                whenCreated={setMap}>
+                whenCreated={loadRoutes}>
                 <TileLayer
                     attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                     url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"

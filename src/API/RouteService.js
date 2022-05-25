@@ -5,7 +5,7 @@ export default {
     const driver = { id: driverId }
     const order = { id: orderId }
     const addresses = addressesId.map(id => {
-      return { id }
+      return { id: id }
     })
 
     return await Service.sendJson(Service.root + 'routes', {
