@@ -46,8 +46,8 @@ export default function AssignOrderModal({ closeModal, order }) {
     const createRoute = () => {
         HopperService.optimization(selectedAddresses, selectedDrivers)
             .then((data) => {
-                setSolutions(data.routeLists)
                 const routes = data.routeLists;
+                setSolutions(routes)
                 for (const [index, route] of routes.entries()) {
                     const ways = route.groupedOrder
                     const points = ways.map((item) => {
@@ -92,7 +92,7 @@ export default function AssignOrderModal({ closeModal, order }) {
             for (const driver of selectedDrivers) {
                 const routeList = solutions.find((item) => item.driver.truck.id === driver.vehicle.id)
                 const addresses = [];
-                for (let i = 0; i < routeList.groupedOrder.length; i++) {
+                for (let i = 1; i < routeList.groupedOrder.length - 1; i++) {
                     addresses.push(routeList.groupedOrder[i].id);
                 }
                 RouteService.addRoute(orderId, driver.id, addresses)

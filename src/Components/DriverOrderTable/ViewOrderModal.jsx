@@ -5,7 +5,8 @@ import L from 'leaflet'
 import 'leaflet-routing-machine'
 import 'leaflet/dist/leaflet.css';
 import '../../styles/leaflet-option.css'
-import { icon } from '../../marker';
+import { greenIcon, icon } from '../../marker';
+import { point } from 'leaflet';
 const customStyles = {
     content: {
         width: 600,
@@ -30,6 +31,9 @@ export default function ViewOrderModal({ closeModal, order }) {
             points.push(item.lon);
             return points;
         })
+        const startPoint = [order.driver.vehicle.startAddress.lat, order.driver.vehicle.startAddress.lon]
+        points.unshift(startPoint);
+        points.push(startPoint)
         L.Routing.control({
             waypoints: points,
             lineOptions: {
@@ -41,6 +45,8 @@ export default function ViewOrderModal({ closeModal, order }) {
             const marker = new L.marker(point, { icon: icon })
             loadedMap.addLayer(marker)
         }
+        const startMarker = new L.marker(startPoint, { icon: greenIcon })
+        loadedMap.addLayer(startMarker)
     }
     return (
         <Modal isOpen={true} onRequestClose={closeModal} style={customStyles}>
