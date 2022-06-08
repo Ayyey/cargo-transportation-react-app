@@ -1,6 +1,6 @@
 import './App.css';
 import React, { useState, useEffect } from 'react';
-import { Route, Routes, useNavigate } from 'react-router-dom';
+import { Route, Routes, useNavigate, useLocation } from 'react-router-dom';
 import Service from './API/Service';
 import Login from './Pages/Login';
 import Home from './Pages/Home';
@@ -11,6 +11,7 @@ function App() {
   const [token, setToken] = useState(localStorage.getItem('token'));
   const [role, setRole] = useState(localStorage.getItem('role'));
   const [userId, setUserId] = useState(localStorage.getItem('userId'))
+  const currentRoute = useLocation();
   const navigate = useNavigate();
   useEffect(() => {
     if (!token) {
@@ -26,10 +27,12 @@ function App() {
         <div className="container d-flex">
           <img src={logo} alt="logo" data-v-95162518="" style={{ width: "40px", height: "40px" }} />
           <h3 className="mx-3">Оптимизация грузоперевозок</h3>
-          <h3 style={{ marginLeft: "auto" }}>{role == 'ADMIN' ? "Администратор" : "Водитель "}</h3>
-          <button className="btn btn-danger" style={{ marginLeft: "auto" }} onClick={() => { localStorage.clear(); navigate('login') }}>
-            Выход
-          </button>
+          {
+            currentRoute.pathname.includes('home') ? 
+            <button className="btn btn-danger" style={{ marginLeft: "auto" }} onClick={() => { localStorage.clear(); navigate('login') }}>
+              Выход
+            </button> : <></>
+          }
         </div>
       </header >
       <Routes>

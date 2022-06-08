@@ -1,5 +1,5 @@
 import Service from "./Service"
-const hopperURL = Service.root + 'hopper/calculateOrderLists'
+const hopperURL = Service.root + 'hopper/routeAnnealing'
 export default {
   async optimization(addresses, drivers) {
     const driversBody = []
@@ -26,7 +26,7 @@ export default {
       })
     }
     const body = { 'rawOrders': ordersBody, 'drivers': driversBody }
-    return await Service.sendJson('http://localhost:8080/api/hopper/calculateOrderLists', body,
+    return await Service.sendJson(hopperURL, body,
       'POST', localStorage.getItem('token'))
   }
 }
