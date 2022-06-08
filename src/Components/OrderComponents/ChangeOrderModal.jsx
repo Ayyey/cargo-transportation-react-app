@@ -89,7 +89,7 @@ export default function ChangeOrderModal({ closeModal, order }) {
                             </ul>
                         </div>
                         <div>Введеные адреса:
-                            <ul className='p-0'>
+                            <ul className='p-0 addressList'>
                                 {
                                     selectedAddresses.map((item, index) => {
                                         return <li key={index} className='list-group-item' onClick={() => {

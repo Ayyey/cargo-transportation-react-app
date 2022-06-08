@@ -12,8 +12,8 @@ import 'leaflet-routing-machine'
 import 'leaflet/dist/leaflet.css';
 const customStyles = {
     content: {
-        width: 800,
-        height: 600,
+        width: 850,
+        height: 680,
         top: '50%',
         left: '50%',
         right: 'auto',
@@ -109,7 +109,7 @@ export default function AssignOrderModal({ closeModal, order }) {
                 <div className="mx-3" style={{ maxWidth: "194px" }}>
                     <div className='d-block' >
                         Доступные водители:
-                        <div className='form-control' style={{ width: "200px", height: "100px" }}>
+                        <div className='form-control' style={{ width: "200px", height: "100px", overflowY: "scroll" }}>
                             {
                                 drivers.map((driver, index) => {
                                     return <div onClick={() => { addSelectedDriver(driver) }} key={index}>{driver.name}</div>
@@ -117,7 +117,7 @@ export default function AssignOrderModal({ closeModal, order }) {
                             }
                         </div>
                         Выбранные водители:
-                        <div className='form-control' style={{ width: "200px", height: "100px" }}>
+                        <div className='form-control' style={{ width: "200px", height: "100px", overflowY: "scroll" }}>
                             {
                                 selectedDrivers.map((driver, index) => {
                                     return <div onClick={() => { removeSelectedDriver(driver) }} key={index}>{driver.name}</div>
@@ -126,7 +126,7 @@ export default function AssignOrderModal({ closeModal, order }) {
                         </div>
                     </div>
                     <div>Адреса:
-                        <ul className='p-0'>
+                        <ul className='p-0 addressList'>
                             {
                                 selectedAddresses.map((item, index) => {
                                     return <li className='list-group-item' key={index}>
